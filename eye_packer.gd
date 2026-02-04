@@ -1,0 +1,52 @@
+extends Node2D
+class_name EyePacker
+
+@export var eye_sprite_base_diameter: float = 400
+@export var start_ring_radius: = 400
+@export var angular_buffer = 0.02*TAU
+
+@onready var low_band_sprites: EyeSpriteCollection = $LowBandEyeSprites
+@onready var mid_band_sprites: EyeSpriteCollection = $MidBandEyeSprites
+@onready var high_band_sprites: EyeSpriteCollection = $HighBandEyeSprites
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+
+func determine_begging_ring_next_angle(previous_angle:float, last_placed_diameter: float, next_placed_diameter: float)->float:
+	var radius_1 = last_placed_diameter/2
+	var radius_2 = next_placed_diameter/2
+	var angle_part_1 = acos((2*start_ring_radius^2-radius_1^2)/(2*start_ring_radius^2))
+	var angle_part_2 = acos((2*start_ring_radius^2-radius_2^2)/(2*start_ring_radius^2))
+	var full_angle = previous_angle+angle_part_1+angle_part_2+angular_buffer
+	return full_angle
+
+
+func place_beginning_ring()->void:
+	var positive_angle: float = 0.01
+	var negative_angle: float = -0.01
+	var last_placed_positive_diameter = 0.0 
+	var last_placed_negative_diameter = 0.0
+	var last_band_selected: Globals.BandValue = null
+	while positive_angle - TAU < negative_angle and negative_angle + TAU > positive_angle:
+		var direction = ["positive", "negative"].pick_random()
+		select_band(last_band_selected)
+		if direction == "positive":
+			
+	
+	
+func select_band(last_band_selected: Globals.BandValue)->Globals.BandValue:
+	var options: Array[Globals.BandValue] = [Globals.BandValue.LOW, Globals.BandValue.MID, Globals.BandValue.HIGH]
+	if last_band_selected == Globals.BandValue.LOW:
+		options.remove_at(options.find(Globals.BandValue.LOW))
+	if last_band_selected == Globals.BandValue.MID:
+		options.remove_at(options.find(Globals.BandValue.MID))
+	if last_band_selected == Globals.BandValue.HIGH:
+		options.remove_at(options.find(Globals.BandValue.HIGH))	
+	return options.pick_random();

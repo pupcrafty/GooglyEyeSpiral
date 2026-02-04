@@ -1,0 +1,70 @@
+# Godot-specific ignores
+.godot/
+
+# Imported files (edit them in Godot, not in external editors)
+*.import
+
+# Imported translations
+*.translation
+
+# Mono-specific ignores (if using C#)
+.mono/
+data_*/
+mono_crash.*.json
+
+# System/OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
+
+# Godot-specific files
+*.tmp
+*.uid
+
+# Build results
+export/
+export_presets.cfg
+
+# Android
+android/
+*.apk
+*.aab
+
+# iOS
+ios/
+
+# Windows
+*.exe
+*.pck
+
+# Linux
+*.x86_64
+*.x86_32
+
+# macOS
+*.app
+*.dmg
+
+# Visual Studio / Visual Studio Code
+.vscode/
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# JetBrains Rider
+.idea/
+
+# Backup files
+*.bak
+*.swp
+*~
+
+# Logs
+*.log
