@@ -2,6 +2,7 @@ extends Sprite2D
 class_name EyeSprite
 
 @export var in_use: bool = false
+@export var base_diameter = 400;
 
 @onready var parent_collection = $".." 
 
@@ -28,7 +29,7 @@ func move_along_spiral(delta: float)->void:
 		process_angle += Globals.spiral_rotation_speed *delta
 		global_position = Vector2(cos(process_angle), sin(process_angle))*process_radius
 		var scale_size: float = (parent_collection.base_scale)
-		scale = Vector2(process_radius/400, process_radius/400)
+		scale = Vector2(process_radius*scale_size/400, process_radius*scale_size/400)
 	
 func determine_base_values()->void:
 	base_angle = global_position.angle()
@@ -39,4 +40,4 @@ func determine_base_values()->void:
 
 
 func get_actual_px_size()->float:
-	return (texture.get_size().x*scale.x+texture.get_size().y*scale.y)/2
+	return scale.x*base_diameter
