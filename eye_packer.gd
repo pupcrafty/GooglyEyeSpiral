@@ -19,7 +19,7 @@ func _process(delta: float) -> void:
 	pass
 
 
-func determine_begging_ring_next_angle(previous_angle:float, last_placed_diameter: float, next_placed_diameter: float)->float:
+func determine_beginning_ring_next_angle(previous_angle:float, last_placed_diameter: float, next_placed_diameter: float)->float:
 	var radius_1 = last_placed_diameter/2
 	var radius_2 = next_placed_diameter/2
 	var angle_part_1 = acos((2*start_ring_radius^2-radius_1^2)/(2*start_ring_radius^2))
@@ -33,12 +33,13 @@ func place_beginning_ring()->void:
 	var negative_angle: float = -0.01
 	var last_placed_positive_diameter = 0.0 
 	var last_placed_negative_diameter = 0.0
-	var last_band_selected: Globals.BandValue = null
+	var last_band_selected: Globals.BandValue = Globals.BandValue.HIGH
 	while positive_angle - TAU < negative_angle and negative_angle + TAU > positive_angle:
 		var direction = ["positive", "negative"].pick_random()
-		select_band(last_band_selected)
+		last_band_selected = select_band(last_band_selected)
+		var sprite: EyeSprite = get_band_child(last_band_selected)
 		if direction == "positive":
-			
+			determine_beginning_ring_next_angle(positive_angle, last_placed_positive_diameter, sprite.get_actual_px_size())
 	
 	
 func select_band(last_band_selected: Globals.BandValue)->Globals.BandValue:
@@ -50,3 +51,13 @@ func select_band(last_band_selected: Globals.BandValue)->Globals.BandValue:
 	if last_band_selected == Globals.BandValue.HIGH:
 		options.remove_at(options.find(Globals.BandValue.HIGH))	
 	return options.pick_random();
+
+
+func get_band_child(band_selected: Globals.BandValue)-> EyeSprite:
+	if band_selected == Globals.BandValue.LOW:
+		return low_band_sprites.pass_child_for_use()
+	if band_selected == GlobalVariables.BandValue.MID:
+		return mid_band_sprites.pass_child_for_use()
+	if band_selected == Globals.BandValue.HIGH:
+		return high_band_sprites.pass_child_for_use()
+	return null
