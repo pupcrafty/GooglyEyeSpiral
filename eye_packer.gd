@@ -2,7 +2,7 @@ extends Node2D
 class_name EyePacker
 
 @export var start_ring_radius: = 400
-@export var angular_buffer = 0.0
+@export var angular_buffer = 0.02
 
 @onready var low_band_sprites: EyeSpriteCollection = $LowBandEyeSprites
 @onready var mid_band_sprites: EyeSpriteCollection = $MidBandEyeSprites
@@ -35,7 +35,7 @@ func place_beginning_ring()->void:
 	var last_placed_positive_diameter = 0.0 
 	var last_placed_negative_diameter = 0.0
 	var last_band_selected: Globals.BandValue = Globals.BandValue.HIGH
-	while positive_angle - TAU < negative_angle and negative_angle + TAU > positive_angle:
+	while positive_angle - negative_angle  < TAU/2 :
 		var direction = ["positive", "negative"].pick_random()
 		last_band_selected = select_band(last_band_selected)
 		var sprite: EyeSprite = get_band_child(last_band_selected)
@@ -45,14 +45,14 @@ func place_beginning_ring()->void:
 				print("Chose Positive")
 				var new_angle = determine_beginning_ring_next_angle(positive_angle, last_placed_positive_diameter, sprite.get_actual_px_size(),1)
 				sprite.global_position = Vector2.from_angle(new_angle)*start_ring_radius
-				twin_sprite.global_position = Vector2.from_angle(new_angle+TAU)*start_ring_radius
+				twin_sprite.global_position = Vector2.from_angle(new_angle+TAU/2)*start_ring_radius
 				positive_angle = new_angle
 				last_placed_positive_diameter = sprite.get_actual_px_size()
 			else:
 				print("Chose Negative")
 				var new_angle = determine_beginning_ring_next_angle(negative_angle, last_placed_positive_diameter, sprite.get_actual_px_size(),-1)
 				sprite.global_position = Vector2.from_angle(new_angle)*start_ring_radius
-				twin_sprite.global_position = Vector2.from_angle(new_angle-TAU)*start_ring_radius
+				twin_sprite.global_position = Vector2.from_angle(new_angle-TAU/2)*start_ring_radius
 				negative_angle = new_angle
 				last_placed_negative_diameter = sprite.get_actual_px_size()
 			print("Positive Angle: ", positive_angle)
