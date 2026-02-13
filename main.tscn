@@ -2,9 +2,13 @@
 
 [ext_resource type="Script" uid="uid://dxdugpw44fdr6" path="res://main.gd" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://c17n3f8cpt8x6" path="res://googly_eye.tscn" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://c8aboshcqn0jp" path="res://audio_service_osc.gd" id="2_q4m8p"]
 [ext_resource type="Script" uid="uid://h5ectro4svj2" path="res://band_eye_sprites_collection.gd" id="3_h2yge"]
 [ext_resource type="Script" uid="uid://8atv3bl7sbtx" path="res://eye_packer.gd" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://cvhjjox8irxgi" path="res://eye_sprite.tscn" id="5_7mycd"]
+[ext_resource type="Texture2D" uid="uid://b3kfqif5i4php" path="res://googly_eye_assets/googly_eye_back.png" id="7_5vw27"]
+[ext_resource type="Texture2D" uid="uid://chmkxnvp11ci7" path="res://googly_eye_assets/googly_eye_pupil.png" id="8_kek77"]
+[ext_resource type="Script" uid="uid://ohbf4vh4oj7n" path="res://central_eye.gd" id="9_w9h8m"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_lquwl"]
 viewport_path = NodePath("LowBandEye")
@@ -19,6 +23,9 @@ viewport_path = NodePath("HighBandEye")
 script = ExtResource("1_0xm2m")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=199185429]
+
+[node name="AudioServiceOSC" type="Node" parent="." unique_id=1118965782]
+script = ExtResource("2_q4m8p")
 
 [node name="LowBandEye" type="SubViewport" parent="." unique_id=2053155192]
 transparent_bg = true
@@ -47,12 +54,11 @@ listen_to_band = 2
 
 [node name="EyePacker" type="Node2D" parent="." unique_id=604985837]
 script = ExtResource("3_lquwl")
-start_ring_radius = null
-angular_buffer = null
+angular_buffer = 0.05
 
 [node name="LowBandEyeSprites" type="Node2D" parent="EyePacker" unique_id=2003390753]
 script = ExtResource("3_h2yge")
-base_scale = 0.333
+base_scale = 0.4
 eye_sprite_scene = ExtResource("5_7mycd")
 sprite_texture = SubResource("ViewportTexture_lquwl")
 
@@ -62,7 +68,7 @@ sprite_texture = SubResource("ViewportTexture_lquwl")
 
 [node name="MidBandEyeSprites" type="Node2D" parent="EyePacker" unique_id=1617924870]
 script = ExtResource("3_h2yge")
-base_scale = 0.235
+base_scale = 0.282
 eye_sprite_scene = ExtResource("5_7mycd")
 sprite_texture = SubResource("ViewportTexture_7mycd")
 
@@ -72,7 +78,7 @@ sprite_texture = SubResource("ViewportTexture_7mycd")
 
 [node name="HighBandEyeSprites" type="Node2D" parent="EyePacker" unique_id=1980547694]
 script = ExtResource("3_h2yge")
-base_scale = 0.111
+base_scale = 0.133
 eye_sprite_scene = ExtResource("5_7mycd")
 sprite_texture = SubResource("ViewportTexture_272bh")
 
@@ -84,3 +90,33 @@ sprite_texture = SubResource("ViewportTexture_272bh")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="EyePacker/SpawnArea1" unique_id=330764640]
 polygon = PackedVector2Array(-194, -723, -173, -637, 1, -659, 173, -637, 195, -724, 0, -750)
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1675540524]
+layer = 10
+
+[node name="EyeCounter" type="Label" parent="UI" unique_id=1159067034]
+offset_left = 16.0
+offset_top = 16.0
+theme_override_font_sizes/font_size = 24
+text = "Eyes total: 0 | Active: 0 | Pooled: 0"
+
+[node name="CentralEye" type="Node2D" parent="." unique_id=1625385555]
+z_index = 2
+scale = Vector2(0.8, 0.8)
+script = ExtResource("9_w9h8m")
+
+[node name="Iris" type="Sprite2D" parent="CentralEye" unique_id=515061445]
+texture = ExtResource("7_5vw27")
+
+[node name="Pupil" type="Sprite2D" parent="CentralEye" unique_id=43728049]
+texture = ExtResource("8_kek77")
+
+[node name="background" type="Node2D" parent="." unique_id=315108850]
+z_index = -3
+
+[node name="ColorRect" type="ColorRect" parent="background" unique_id=204337247]
+offset_left = -750.0
+offset_top = -750.0
+offset_right = 750.0
+offset_bottom = 750.0
+color = Color(0, 0, 0, 1)
